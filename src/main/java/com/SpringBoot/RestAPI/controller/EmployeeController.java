@@ -1,13 +1,22 @@
 package com.SpringBoot.RestAPI.controller;
 
 import com.SpringBoot.RestAPI.dto.EmployeeDTO;
+import com.SpringBoot.RestAPI.entities.EmployeeEntity;
+import com.SpringBoot.RestAPI.repositories.EmployeeRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
+
+    private final EmployeeRepository employeeRepository;
+
+    public EmployeeController(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @GetMapping(path = "/getSecretMessage")
     public String getSecretMessage(){
@@ -15,20 +24,19 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/{employeeId}")
-    public EmployeeDTO getEmployeeById(@PathVariable Long employeeId){
-        return  new EmployeeDTO(employeeId,"rahul","rahul@gmail.com",21, LocalDate.of(2025,12,24),true);
+    public EmployeeEntity getEmployeeById(@PathVariable Long employeeId){
+        return  employeeRepository.findById(employeeId).orElse(null);
     }
 
     @GetMapping
-    public String getAllEmployees(@RequestParam(required = false,name ="inputAge") Integer age,
-                                  @RequestParam(required = false) String name){
-        return "age is "+age+" name is "+name;
+    public List<EmployeeEntity> getAllEmployees(@RequestParam(required = false,name ="inputAge") Integer age,
+                                                @RequestParam(required = false) String name){
+        return employeeRepository.findAll();
     }
 
     @PostMapping
-    public EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
-        inputEmployee.setId(100L);
-        return inputEmployee;
+    public EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity inputEmployee){
+        return employeeRepository.save(inputEmployee);
     }
 
     @PutMapping
