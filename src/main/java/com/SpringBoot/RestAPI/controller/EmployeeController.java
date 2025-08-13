@@ -4,6 +4,7 @@ import com.SpringBoot.RestAPI.dto.EmployeeDTO;
 import com.SpringBoot.RestAPI.entities.EmployeeEntity;
 import com.SpringBoot.RestAPI.repositories.EmployeeRepository;
 import com.SpringBoot.RestAPI.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
+    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
         EmployeeDTO employeeDTO= employeeService.createNewEmployee(inputEmployee);
         return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
     }
